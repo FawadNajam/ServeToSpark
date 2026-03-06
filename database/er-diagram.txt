@@ -1,0 +1,3 @@
+ER diagram image generated at:
+assets/er-diagram.png
+
