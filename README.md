@@ -17,7 +17,6 @@ The repository contains:
 | `backend/`     | Node.js + Express + TypeScript REST API with MySQL (Sequelize)                                    |
 | `admin-panel/` | Next.js admin dashboard (login, dashboard, users, services, categories, bookings)                 |
 | `website/`     | **Customer-facing website** — browse services, book, track bookings, profile (Next.js, port 3001) |
-| `mobile-app/`  | React Native (Expo) mobile app _(optional; not included for now)_                                 |
 | `database/`    | MySQL schema (`schema.sql`) and ER diagram reference                                              |
 | `docs/`        | API overview and Postman collection                                                               |
 
@@ -30,7 +29,6 @@ The repository contains:
 | **Backend**          | Node.js, TypeScript, Express.js, MySQL, Sequelize ORM, JWT, bcrypt, express-validator |
 | **Admin Panel**      | Next.js 14 (App Router), TypeScript, React Query, Axios, Tailwind CSS                 |
 | **Customer Website** | Next.js 14 (App Router), TypeScript, React Query, Axios, Tailwind CSS                 |
-| **Mobile App**       | React Native, Expo, TypeScript, React Query, Axios _(optional)_                       |
 | **Database**         | MySQL 8 (relational schema: roles, users, services, service_categories, bookings)     |
 
 ---
@@ -98,16 +96,6 @@ npm run dev
 
 Open **http://localhost:3001**. Customers can sign up, browse services, book a service, view **My Bookings**, and manage **Profile**. Use the same backend; ensure backend and database are running.
 
-### 5. Mobile App (optional)
-
-A React Native (Expo) mobile app is part of the assignment deliverables. If a `mobile-app/` directory is present in the repo:
-
-```bash
-cd mobile-app
-npm install
-npx expo start
-```
-
 ---
 
 ## Sample Credentials
@@ -155,7 +143,6 @@ ServeToSpark/
 ├── backend/          # Express + Sequelize API
 ├── admin-panel/      # Next.js admin dashboard (port 3000)
 ├── website/          # Customer-facing website (port 3001)
-├── mobile-app/       # React Native (optional)
 ├── database/         # schema.sql, ER diagram
 ├── docs/             # api_overview.md, postman_collection.json
 └── README.md
@@ -165,4 +152,4 @@ ServeToSpark/
 
 ## License
 
-Private / assessment project.
+Private / personal project.
