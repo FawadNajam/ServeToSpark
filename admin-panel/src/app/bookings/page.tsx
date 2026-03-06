@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@services/apiClient';
-import type { BookingDto, BookingStatus } from '@types/api';
+import type { BookingDto, BookingStatus } from '../../types/api';
 import { AdminLayoutShell } from '@components/layout/AdminLayout';
 
 async function fetchBookings(): Promise<BookingDto[]> {

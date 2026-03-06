@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@services/apiClient';
-import type { DashboardStats } from '@types/api';
+import type { DashboardStats } from '../../types/api';
 import { AdminLayoutShell } from '@components/layout/AdminLayout';
 
 async function fetchDashboard(): Promise<DashboardStats> {

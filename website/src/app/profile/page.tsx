@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { apiClient } from '@services/apiClient';
-import type { UserProfile } from '@types/api';
-import { Header } from '@components/Header';
-import { useAuth } from '@hooks/useAuth';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { apiClient } from "@services/apiClient";
+import type { UserProfile } from "../../types/api";
+import { Header } from "@components/Header";
+import { useAuth } from "@hooks/useAuth";
 
 async function fetchProfile(id: number): Promise<UserProfile> {
   const { data } = await apiClient.get<UserProfile>(`/users/${id}`);
@@ -17,19 +17,23 @@ export default function ProfilePage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const { data: profile, isLoading, isError } = useQuery({
-    queryKey: ['profile', user?.id],
+  const {
+    data: profile,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["profile", user?.id],
     queryFn: () => fetchProfile(user!.id),
-    enabled: !!user?.id
+    enabled: !!user?.id,
   });
 
   useEffect(() => {
     if (profile) {
       setName(profile.name);
-      setPhone(profile.phone ?? '');
+      setPhone(profile.phone ?? "");
     }
   }, [profile]);
 
@@ -38,12 +42,12 @@ export default function ProfilePage() {
       await apiClient.put(`/users/${user!.id}`, { name, phone: phone || null });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile', user?.id] });
-    }
+      queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
+    },
   });
 
   useEffect(() => {
-    if (user === null) router.replace('/login?redirect=/profile');
+    if (user === null) router.replace("/login?redirect=/profile");
   }, [user, router]);
 
   if (!user) return null;
@@ -55,7 +59,9 @@ export default function ProfilePage() {
         <h1 className="text-2xl font-bold text-slate-900">Profile</h1>
         <p className="mt-1 text-slate-600">Manage your account.</p>
         {isLoading && <p className="mt-6 text-slate-500">Loading…</p>}
-        {isError && <p className="mt-6 text-red-600">Failed to load profile.</p>}
+        {isError && (
+          <p className="mt-6 text-red-600">Failed to load profile.</p>
+        )}
         {profile && (
           <form
             className="card mt-6 space-y-4 p-6"
@@ -65,12 +71,16 @@ export default function ProfilePage() {
             }}
           >
             <div>
-              <label className="block text-sm font-medium text-slate-700">Email</label>
+              <label className="block text-sm font-medium text-slate-700">
+                Email
+              </label>
               <p className="mt-1 text-slate-900">{profile.email}</p>
               <p className="text-xs text-slate-500">Email cannot be changed.</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">Name</label>
+              <label className="block text-sm font-medium text-slate-700">
+                Name
+              </label>
               <input
                 type="text"
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
@@ -79,7 +89,9 @@ export default function ProfilePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">Phone</label>
+              <label className="block text-sm font-medium text-slate-700">
+                Phone
+              </label>
               <input
                 type="tel"
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
@@ -93,8 +105,12 @@ export default function ProfilePage() {
             {updateMutation.isSuccess && (
               <p className="text-sm text-emerald-600">Profile updated.</p>
             )}
-            <button type="submit" disabled={updateMutation.isPending} className="btn-primary">
-              {updateMutation.isPending ? 'Saving…' : 'Save changes'}
+            <button
+              type="submit"
+              disabled={updateMutation.isPending}
+              className="btn-primary"
+            >
+              {updateMutation.isPending ? "Saving…" : "Save changes"}
             </button>
           </form>
         )}

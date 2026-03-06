@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { apiClient } from '@services/apiClient';
-import type { ServiceDto } from '@types/api';
-import { Header } from '@components/Header';
-import { useAuth } from '@hooks/useAuth';
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { apiClient } from "@services/apiClient";
+import type { ServiceDto } from "../../types/api";
+import { Header } from "@components/Header";
+import { useAuth } from "@hooks/useAuth";
 
 async function fetchService(id: number): Promise<ServiceDto> {
   const { data } = await apiClient.get<ServiceDto>(`/services/${id}`);
@@ -19,36 +19,36 @@ export default function BookServicePage() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const serviceId = Number(searchParams.get('serviceId'));
-  const [bookingDate, setBookingDate] = useState('');
-  const [bookingTime, setBookingTime] = useState('');
-  const [notes, setNotes] = useState('');
+  const serviceId = Number(searchParams.get("serviceId"));
+  const [bookingDate, setBookingDate] = useState("");
+  const [bookingTime, setBookingTime] = useState("");
+  const [notes, setNotes] = useState("");
 
   const { data: service, isLoading: loadingService } = useQuery({
-    queryKey: ['service', serviceId],
+    queryKey: ["service", serviceId],
     queryFn: () => fetchService(serviceId),
-    enabled: !!serviceId && !Number.isNaN(serviceId)
+    enabled: !!serviceId && !Number.isNaN(serviceId),
   });
 
   const bookMutation = useMutation({
     mutationFn: async () => {
       const dateTime = `${bookingDate}T${bookingTime}:00.000Z`;
-      await apiClient.post('/bookings', {
+      await apiClient.post("/bookings", {
         serviceId,
         bookingDate: dateTime,
-        notes: notes.trim() || undefined
+        notes: notes.trim() || undefined,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] });
-      router.push('/bookings');
-    }
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      router.push("/bookings");
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      router.push('/login?redirect=/book?serviceId=' + serviceId);
+      router.push("/login?redirect=/book?serviceId=" + serviceId);
       return;
     }
     if (!bookingDate || !bookingTime) return;
@@ -61,7 +61,10 @@ export default function BookServicePage() {
         <Header />
         <main className="mx-auto max-w-6xl px-4 py-8">
           <p className="text-red-600">Select a service first.</p>
-          <Link href="/services" className="mt-2 inline-block text-brand-600 hover:underline">
+          <Link
+            href="/services"
+            className="mt-2 inline-block text-brand-600 hover:underline"
+          >
             Browse services
           </Link>
         </main>
@@ -87,7 +90,9 @@ export default function BookServicePage() {
         )}
         <form onSubmit={handleSubmit} className="card mt-6 space-y-4 p-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700">Date</label>
+            <label className="block text-sm font-medium text-slate-700">
+              Date
+            </label>
             <input
               type="date"
               required
@@ -97,7 +102,9 @@ export default function BookServicePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">Time</label>
+            <label className="block text-sm font-medium text-slate-700">
+              Time
+            </label>
             <input
               type="time"
               required
@@ -107,7 +114,9 @@ export default function BookServicePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">Notes (optional)</label>
+            <label className="block text-sm font-medium text-slate-700">
+              Notes (optional)
+            </label>
             <textarea
               rows={3}
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
@@ -118,7 +127,11 @@ export default function BookServicePage() {
           </div>
           {bookMutation.isError && (
             <p className="text-sm text-red-600">
-              {(bookMutation.error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Booking failed.'}
+              {(
+                bookMutation.error as {
+                  response?: { data?: { message?: string } };
+                }
+              )?.response?.data?.message || "Booking failed."}
             </p>
           )}
           <button
@@ -126,7 +139,7 @@ export default function BookServicePage() {
             disabled={!user || bookMutation.isPending}
             className="btn-primary w-full"
           >
-            {bookMutation.isPending ? 'Booking…' : 'Confirm booking'}
+            {bookMutation.isPending ? "Booking…" : "Confirm booking"}
           </button>
         </form>
       </main>

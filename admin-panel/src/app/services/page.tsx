@@ -1,54 +1,58 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { apiClient } from '@services/apiClient';
-import type { CategoryDto, ServiceDto } from '@types/api';
-import { AdminLayoutShell } from '@components/layout/AdminLayout';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { apiClient } from "@services/apiClient";
+import type { CategoryDto, ServiceDto } from "../../types/api";
+import { AdminLayoutShell } from "@components/layout/AdminLayout";
 
 async function fetchServices(): Promise<ServiceDto[]> {
-  const res = await apiClient.get('/services');
+  const res = await apiClient.get("/services");
   return res.data as ServiceDto[];
 }
 
 async function fetchCategories(): Promise<CategoryDto[]> {
-  const res = await apiClient.get('/categories');
+  const res = await apiClient.get("/categories");
   return res.data as CategoryDto[];
 }
 
 export default function ServicesPage(): JSX.Element {
   const queryClient = useQueryClient();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [categoryId, setCategoryId] = useState("");
 
-  const { data: services, isLoading, isError } = useQuery({
-    queryKey: ['services'],
-    queryFn: fetchServices
+  const {
+    data: services,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["services"],
+    queryFn: fetchServices,
   });
 
   const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: fetchCategories
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
   });
 
   const { mutateAsync, isPending, error } = useMutation({
     mutationFn: async () => {
-      await apiClient.post('/services', {
+      await apiClient.post("/services", {
         name,
         description,
         price: Number(price),
-        categoryId: Number(categoryId)
+        categoryId: Number(categoryId),
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['services'] }).catch(() => {});
-      setName('');
-      setDescription('');
-      setPrice('');
-      setCategoryId('');
-    }
+      queryClient.invalidateQueries({ queryKey: ["services"] }).catch(() => {});
+      setName("");
+      setDescription("");
+      setPrice("");
+      setCategoryId("");
+    },
   });
 
   const handleCreate = async (e: React.FormEvent): Promise<void> => {
@@ -62,7 +66,9 @@ export default function ServicesPage(): JSX.Element {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">Services</h2>
-          <p className="text-sm text-slate-500">Manage the catalog of services available in the marketplace.</p>
+          <p className="text-sm text-slate-500">
+            Manage the catalog of services available in the marketplace.
+          </p>
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-[2fr,1.1fr]">
@@ -86,7 +92,8 @@ export default function ServicesPage(): JSX.Element {
                     <td>{svc.id}</td>
                     <td>{svc.name}</td>
                     <td>
-                      {categories?.find((c) => c.id === svc.categoryId)?.name ?? `#${svc.categoryId}`}
+                      {categories?.find((c) => c.id === svc.categoryId)?.name ??
+                        `#${svc.categoryId}`}
                     </td>
                     <td>${Number(svc.price).toFixed(2)}</td>
                     <td>{new Date(svc.createdAt).toLocaleString()}</td>
@@ -97,7 +104,9 @@ export default function ServicesPage(): JSX.Element {
           )}
         </div>
         <div className="card">
-          <h3 className="mb-2 text-sm font-semibold text-slate-800">Create Service</h3>
+          <h3 className="mb-2 text-sm font-semibold text-slate-800">
+            Create Service
+          </h3>
           <form className="space-y-3" onSubmit={handleCreate}>
             <input
               type="text"
@@ -136,9 +145,15 @@ export default function ServicesPage(): JSX.Element {
                 ))}
               </select>
             </div>
-            {error && <p className="text-xs text-red-600">Failed to create service.</p>}
-            <button type="submit" disabled={isPending} className="btn-primary w-full">
-              {isPending ? 'Creating…' : 'Add Service'}
+            {error && (
+              <p className="text-xs text-red-600">Failed to create service.</p>
+            )}
+            <button
+              type="submit"
+              disabled={isPending}
+              className="btn-primary w-full"
+            >
+              {isPending ? "Creating…" : "Add Service"}
             </button>
           </form>
         </div>
@@ -146,4 +161,3 @@ export default function ServicesPage(): JSX.Element {
     </AdminLayoutShell>
   );
 }
-

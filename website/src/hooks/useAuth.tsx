@@ -1,15 +1,20 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import type { ReactNode } from 'react';
-import { apiClient, TOKEN_KEY, USER_KEY } from '@services/apiClient';
-import type { AuthUser } from '@types/api';
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import { apiClient, TOKEN_KEY, USER_KEY } from "@services/apiClient";
+import type { AuthUser } from "../types/api";
 
 interface AuthContextValue {
   user: AuthUser | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, phone?: string) => Promise<void>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    phone?: string,
+  ) => Promise<void>;
   logout: () => void;
 }
 
@@ -20,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     const t = localStorage.getItem(TOKEN_KEY);
     const u = localStorage.getItem(USER_KEY);
     if (t && u) {
@@ -30,11 +35,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const { data } = await apiClient.post<{ token: string; user: AuthUser }>('/auth/login', {
-      email,
-      password
-    });
-    if (typeof window !== 'undefined') {
+    const { data } = await apiClient.post<{ token: string; user: AuthUser }>(
+      "/auth/login",
+      {
+        email,
+        password,
+      },
+    );
+    if (typeof window !== "undefined") {
       localStorage.setItem(TOKEN_KEY, data.token);
       localStorage.setItem(USER_KEY, JSON.stringify(data.user));
     }
@@ -46,15 +54,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     name: string,
     email: string,
     password: string,
-    phone?: string
+    phone?: string,
   ) => {
-    const { data } = await apiClient.post<{ token: string; user: AuthUser }>('/auth/register', {
-      name,
-      email,
-      password,
-      phone: phone || undefined
-    });
-    if (typeof window !== 'undefined') {
+    const { data } = await apiClient.post<{ token: string; user: AuthUser }>(
+      "/auth/register",
+      {
+        name,
+        email,
+        password,
+        phone: phone || undefined,
+      },
+    );
+    if (typeof window !== "undefined") {
       localStorage.setItem(TOKEN_KEY, data.token);
       localStorage.setItem(USER_KEY, JSON.stringify(data.user));
     }
@@ -63,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
     }
@@ -80,6 +91,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }

@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { apiClient } from '@services/apiClient';
-import type { CategoryDto } from '@types/api';
+import type { CategoryDto } from '../../types/api';
 import { AdminLayoutShell } from '@components/layout/AdminLayout';
 
 async function fetchCategories(): Promise<CategoryDto[]> {

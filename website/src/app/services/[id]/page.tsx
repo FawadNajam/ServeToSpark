@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { apiClient } from '@services/apiClient';
-import type { ServiceDto } from '@types/api';
+import type { ServiceDto } from '../../../types/api';
 import { Header } from '@components/Header';
 
 async function fetchService(id: number): Promise<ServiceDto> {

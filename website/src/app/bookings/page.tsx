@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { apiClient } from '@services/apiClient';
-import type { BookingDto } from '@types/api';
+import type { BookingDto } from '../../types/api';
 import { Header } from '@components/Header';
 import { useAuth } from '@hooks/useAuth';
 
