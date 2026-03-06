@@ -1,16 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@hooks/useAuth';
 import { Header } from '@components/Header';
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
   const { login } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,6 +21,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+
     try {
       await login(email, password);
       router.push(redirect);
@@ -39,6 +41,7 @@ export default function LoginPage() {
           <p className="mt-1 text-sm text-slate-500">
             Sign in to book services and manage your bookings.
           </p>
+
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700">Email</label>
@@ -50,6 +53,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-slate-700">Password</label>
               <input
@@ -60,11 +64,14 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             {error && <p className="text-sm text-red-600">{error}</p>}
+
             <button type="submit" disabled={loading} className="btn-primary w-full">
               {loading ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
+
           <p className="mt-4 text-center text-sm text-slate-500">
             Don&apos;t have an account?{' '}
             <Link href="/register" className="font-medium text-brand-600 hover:underline">
@@ -74,5 +81,13 @@ export default function LoginPage() {
         </div>
       </main>
     </>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
+      <LoginPageInner />
+    </Suspense>
   );
 }

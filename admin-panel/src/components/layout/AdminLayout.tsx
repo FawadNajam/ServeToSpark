@@ -14,7 +14,11 @@ const navItems = [
   { href: "/bookings", label: "Bookings" },
 ];
 
-export function AdminLayoutShell({ children }: { children: ReactNode }): JSX.Element {
+export function AdminLayoutShell({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element | null {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
@@ -38,6 +42,7 @@ export function AdminLayoutShell({ children }: { children: ReactNode }): JSX.Ele
           </div>
           <div className="mt-1 text-xs text-slate-500">Serve To Spark</div>
         </div>
+
         <nav className="space-y-1">
           {navItems.map((item) => {
             const active = pathname?.startsWith(item.href);
@@ -56,10 +61,12 @@ export function AdminLayoutShell({ children }: { children: ReactNode }): JSX.Ele
             );
           })}
         </nav>
+
         <div className="mt-auto pt-6 text-xs text-slate-500">
           <div className="mb-2">Signed in as</div>
           <div className="font-medium text-slate-700">{user.name}</div>
           <div className="text-slate-400">{user.email}</div>
+
           <button
             type="button"
             onClick={logout}
@@ -69,12 +76,14 @@ export function AdminLayoutShell({ children }: { children: ReactNode }): JSX.Ele
           </button>
         </div>
       </aside>
+
       <main className="flex-1">
         <header className="flex items-center justify-between border-b border-slate-200 bg-white px-8 py-4">
           <h1 className="text-lg font-semibold text-slate-900">
             Admin Dashboard
           </h1>
         </header>
+
         <div className="px-8 py-6">{children}</div>
       </main>
     </div>
